@@ -1,6 +1,6 @@
 -- ============================================================================
 -- PROYECTO COMPLETO: ANÁLISIS EFICIENCIA DIDI FOOD
--- Sistema de 4 scripts para análisis de tesis
+-- Sistema de 4 scripts para análisis de miniproyecto
 -- Estructura: unidades_progreso = pedidos_cohete (conteo directo)
 -- ============================================================================
 
@@ -324,6 +324,4 @@ WHERE eficiencia_cohete = (SELECT MAX(eficiencia_cohete) FROM registros_didi_ana
 
 -- ============================================================================
 -- FIN DE LOS SCRIPTS
--- ============================================================================
--- Usar estos resultados para tablas y gráficos en tu tesis
 -- ============================================================================
