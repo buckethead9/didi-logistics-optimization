@@ -4,7 +4,7 @@
 
 **Versión:** 1.0  
 **Fecha:** Enero 2026  
-**Dataset:** 25 días operativos (2025-12-05 a 2026-01-30)
+**Dataset:** 24 días operativos (2025-12-05 a 2026-01-30)
 
 ---
 
@@ -17,7 +17,7 @@
 **Definición:** Fecha del día operativo  
 **Fuente:** Calendario  
 **Rango:** 2025-12-05 a 2026-01-30  
-**Valores únicos:** 25
+**Valores únicos:** 24``
 
 ---
 
@@ -56,7 +56,7 @@
 **Definición:** Distancia **real pedaleada** según GPS  
 **Fuente:** Google Maps Timeline o Strava  
 **Rango observado:** 11.16 - 104.61 km  
-**Promedio:** 61.05 km/día  
+**Promedio:** 63.6 km/día  
 **Notas:**
 - Incluye retornos y desplazamientos entre pedidos
 - Medición GPS con precisión ±5% en zona urbana
@@ -190,7 +190,7 @@
 **Ejemplo:** 1.97  
 **Definición:** **Factor de multiplicación algorítmica** - Cuántos km paga DiDi por cada km real pedaleado  
 **Rango observado:** 1.29 - 1.99x  
-**Promedio:** **1.65x**  
+**Promedio:** **1.71x**  
 **Interpretación:**
 - **RO > 2.0:** 🚀 Excelente (hackeo máximo del algoritmo)
 - **RO 1.5-2.0:** 🟢 Bueno (ventaja competitiva)
@@ -408,7 +408,7 @@
 
 ### Hipótesis 1: Arbitraje Algorítmico
 **Variables:** `ratio_optimizacion`, `km_google_maps`, `km_didi_app`  
-**Resultado:** RO promedio = 1.65x (comprobado)
+**Resultado:** RO promedio = 1.71x (comprobado)
 
 ### Hipótesis 2: Estrategia Cohetes Rentable
 **Variables:** `eficiencia_cohete_pct`, `utilidad_neta`  
@@ -430,7 +430,7 @@
 
 ### Datos Faltantes
 - **0 valores faltantes** en variables primarias
-- Todos los 25 días tienen datos completos
+- Todos los 24 días tienen datos completos
 
 ### Transformaciones Aplicadas
 - Conversión de formato de KM (coma → punto decimal)
@@ -441,4 +441,5 @@
 
 **Versión del Diccionario:** 1.0  
 **Última actualización:** Enero 2026  
+**Dataset:** 24 días operativos  
 **Total de variables documentadas:** 22 (9 primarias + 13 derivadas)
