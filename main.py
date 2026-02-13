@@ -7,6 +7,9 @@ Python: 3.14
 
 Este script procesa datos crudos de operaciones de logística en bicicleta,
 audita la asimetría algorítmica y genera datasets limpios para análisis SQL.
+
+NOTA: Utiliza modelo de Flujo de Caja Puro (sin desgaste de bicicleta).
+La utilidad neta se calcula únicamente como: Ingreso - Gastos Operativos.
 """
 
 import pandas as pd
@@ -32,7 +35,7 @@ class Config:
     SQL_DIR = BASE_DIR / "sql"
     
     # Constantes del modelo (Fuente de Verdad)
-    DESGASTE_BICI_POR_KM = 124  # COP por km
+    DESGASTE_BICI_POR_KM = 0  # COP por km (Flujo de Caja Puro - Sin Desgaste)
     SALARIO_MINIMO_HORA = 6667  # COP 2026
     UMBRAL_COHETE = 7.0  # km
     UMBRAL_ARBITRAJE_AGRESIVO = 1.5  # RO threshold
@@ -259,12 +262,11 @@ class DiDiDataProcessor:
                      else 'Optimización Estándar'
         )
         
-        # 5. Utilidad Neta
+        # 5. Utilidad Neta (Versión Flujo de Caja Puro - Sin Desgaste)
         print("  → Calculando utilidad_neta...")
         df['utilidad_neta'] = (
             df['ingreso_bruto'] 
-            - df['gasto_extra'] 
-            - (df['km_google_maps'] * self.config.DESGASTE_BICI_POR_KM)
+            - df['gasto_extra']
         )
         
         # 6. Ingreso por KM Real
@@ -317,10 +319,9 @@ class DiDiDataProcessor:
         utilidad_total = df['utilidad_neta'].sum()
         eficiencia_cohete = df['eficiencia_cohete_pct'].mean()
         
-        # ROI
+        # ROI (Solo gastos operativos - Sin desgaste)
         gastos_totales = df['gasto_extra'].sum()
-        desgaste_total = (df['km_google_maps'] * self.config.DESGASTE_BICI_POR_KM).sum()
-        costos_totales = gastos_totales + desgaste_total
+        costos_totales = gastos_totales  # Modelo de Flujo de Caja Puro
         roi_operativo = (utilidad_total / costos_totales) * 100
         
         # Guardar métricas
