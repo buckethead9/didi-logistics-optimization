@@ -1,7 +1,7 @@
 -- ============================================================================
--- ANÁLISIS MCKINSEY: ARBITRAJE ALGORÍTMICO EN LOGÍSTICA ÚLTIMA MILLA
--- Periodo: Diciembre 2025 - Enero 2026 (25 días operativos)
--- Ratio de Optimización Global: 1.65x
+-- ANÁLISIS: ARBITRAJE ALGORÍTMICO EN LOGÍSTICA ÚLTIMA MILLA
+-- Periodo: Diciembre 2025 - Enero 2026 (26 días operativos)
+-- DATA CRUDA REAL - SIN AJUSTES
 -- ============================================================================
 
 CREATE DATABASE IF NOT EXISTS didi_operaciones
@@ -9,9 +9,10 @@ CREATE DATABASE IF NOT EXISTS didi_operaciones
   COLLATE utf8mb4_unicode_ci;
 
 USE didi_operaciones;
+SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 -- ============================================================================
--- TABLA BASE: 9 Variables Minimalistas McKinsey
+-- TABLA BASE: 9 Variables Minimalistas
 -- ============================================================================
 
 DROP TABLE IF EXISTS registros_didi;
@@ -30,50 +31,51 @@ CREATE TABLE registros_didi (
     
     INDEX idx_fecha (fecha),
     INDEX idx_ratio (km_didi_app, km_google_maps)
-) ENGINE=InnoDB COMMENT='Datos dic-ene 2025-2026';
+) ENGINE=InnoDB COMMENT='Data cruda real - 26 días';
 
 -- ============================================================================
--- CARGA DE DATOS (25 días)
+-- CARGA DE DATOS (26 días - DATA REAL)
 -- ============================================================================
 
-INSERT INTO registros_didi 
+INSERT INTO registros_didi
 (fecha, h_inicio, h_fin, km_google_maps, km_didi_app, ingreso_bruto, pedidos_cohete, pedidos_normales, gasto_extra)
 VALUES
 ('2025-12-05', '17:05', '23:23', 45.06, 88.60, 130000, 11, 1, 17000),
 ('2025-12-06', '13:34', '23:56', 72.58, 120.70, 188000, 15, 0, 17000),
 ('2025-12-07', '12:47', '23:25', 66.79, 122.50, 229000, 14, 3, 18000),
 ('2025-12-08', '11:36', '23:18', 104.61, 135.40, 209000, 17, 0, 21000),
-('2025-12-13', '12:27', '22:57', 63.08, 92.10, 143000, 10, 1, 58000),
-('2025-12-14', '12:14', '23:56', 101.87, 139.40, 251000, 18, 0, 19000),
-('2025-12-20', '12:45', '23:05', 102.02, 146.80, 263000, 18, 2, 16000),
-('2025-12-21', '13:33', '23:51', 94.75, 135.10, 268000, 18, 0, 21500),
-('2025-12-23', '16:41', '22:06', 33.69, 51.50, 73000, 6, 2, 16000),
-('2025-12-24', '17:02', '21:56', 54.64, 76.20, 132000, 8, 2, 0),
-('2025-12-25', '12:36', '23:19', 86.50, 144.70, 302000, 12, 9, 14000),
-('2025-12-27', '11:58', '22:24', 72.20, 106.30, 185000, 9, 6, 19000),
-('2025-12-28', '12:20', '23:18', 85.34, 136.20, 283000, 13, 5, 15000),
-('2025-12-31', '17:07', '23:42', 54.41, 81.20, 125000, 10, 3, 0),
-('2026-01-01', '15:34', '23:46', 57.91, 96.90, 183000, 12, 5, 0),
-('2026-01-04', '11:42', '23:22', 42.74, 67.90, 114000, 8, 7, 18000),
-('2026-01-08', '18:10', '21:51', 11.16, 17.70, 31000, 3, 0, 0),
-('2026-01-10', '12:22', '22:49', 48.25, 75.70, 147000, 12, 0, 17000),
-('2026-01-11', '11:45', '23:04', 60.38, 104.70, 244000, 18, 0, 0),
-('2026-01-12', '15:48', '22:33', 35.24, 50.40, 104000, 7, 2, 20000),
-('2026-01-17', '15:47', '21:47', 30.96, 53.30, 119000, 10, 1, 16000),
-('2026-01-18', '13:33', '22:44', 43.98, 87.50, 206500, 17, 2, 21000),
-('2026-01-24', '18:47', '22:02', 19.79, 30.70, 47500, 3, 3, 18000),
-('2026-01-25', '13:33', '21:42', 46.07, 73.50, 169500, 15, 1, 0),
-('2026-01-30', '11:56', '18:15', 28.70, 54.20, 132530, 0, 0, 0);
+('2025-12-13', '17:01', '0:12', 63.08, 92.10, 143000, 10, 1, 58000),
+('2025-12-14', '12:25', '23:14', 101.87, 139.40, 251000, 18, 0, 19000),
+('2025-12-20', '12:11', '23:51', 79.35, 151.30, 263000, 18, 2, 16000),
+('2025-12-21', '11:11', '23:55', 97.20, 144.80, 268000, 18, 0, 21500),
+('2025-12-23', '18:28', '23:06', 23.40, 49.10, 73000, 6, 2, 16000),
+('2025-12-24', '12:04', '20:35', 41.84, 73.30, 132000, 8, 2, 0),
+('2025-12-25', '11:10', '23:40', 69.85, 128.80, 302000, 12, 9, 14000),
+('2025-12-27', '11:58', '20:58', 43.61, 84.70, 185000, 9, 6, 19000),
+('2025-12-28', '11:53', '22:31', 74.51, 132.80, 283000, 13, 5, 15000),
+('2025-12-31', '12:08', '20:40', 54.72, 85.79, 125000, 10, 3, 0),
+('2026-01-01', '11:18', '23:37', 56.33, 97.50, 183000, 12, 5, 0),
+('2026-01-04', '12:40', '21:27', 33.80, 80.10, 114000, 8, 7, 18000),
+('2026-01-08', '17:38', '18:27', 19.31, 25.80, 31000, 3, 0, 0),
+('2026-01-10', '12:40', '22:55', 59.55, 97.60, 147000, 12, 0, 17000),
+('2026-01-11', '11:55', '0:22', 90.60, 138.20, 244000, 18, 0, 0),
+('2026-01-12', '17:01', '22:47', 53.74, 62.80, 104000, 7, 2, 20000),
+('2026-01-17', '17:01', '0:04', 38.95, 80.80, 119000, 10, 1, 16000),
+('2026-01-18', '12:12', '23:51', 79.51, 138.40, 206500, 17, 2, 21000),
+('2026-01-24', '17:26', '21:20', 18.79, 38.00, 47500, 3, 3, 18000),
+('2026-01-25', '12:06', '23:04', 71.45, 113.00, 169500, 15, 1, 0),
+('2026-01-30', '17:42', '23:57', 35.89, 55.40, 89500, 7, 2, 18000),
+('2026-01-31', '12:44', '0:02', 74.99, 125.00, 173030, 14, 1, 20000);
 
 -- ============================================================================
--- MOTOR MCKINSEY: Agregar Columnas Calculadas
+-- MOTOR DE CÁLCULO: Agregar Columnas Derivadas
 -- ============================================================================
 
 ALTER TABLE registros_didi
 ADD COLUMN tiempo_total_horas DECIMAL(5,2) COMMENT 'Duración h_inicio a h_fin',
 ADD COLUMN pedidos_totales INT COMMENT 'Suma cohete + normales',
 ADD COLUMN ratio_optimizacion DECIMAL(5,2) COMMENT 'km_didi / km_google (RO)',
-ADD COLUMN utilidad_neta DECIMAL(10,2) COMMENT 'ingreso - gasto - desgaste_bici',
+ADD COLUMN utilidad_neta DECIMAL(10,2) COMMENT 'ingreso - gasto (flujo de caja puro)',
 ADD COLUMN ingreso_por_km_real DECIMAL(8,2) COMMENT 'utilidad / km_google',
 ADD COLUMN velocidad_enganche DECIMAL(5,1) COMMENT 'minutos por pedido',
 ADD COLUMN velocidad_operativa DECIMAL(5,2) COMMENT 'km/h operativa',
@@ -86,20 +88,22 @@ ADD COLUMN eficiencia_cohete_pct DECIMAL(5,2) COMMENT '% pedidos cohete';
 
 UPDATE registros_didi
 SET 
-    -- Tiempo total
-    tiempo_total_horas = TIMESTAMPDIFF(MINUTE, 
-        CONCAT(fecha, ' ', h_inicio), 
-        CONCAT(fecha, ' ', h_fin)
-    ) / 60.0,
+    -- Tiempo total (maneja cruce de medianoche)
+    tiempo_total_horas = CASE
+        WHEN h_fin >= h_inicio THEN
+            TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
+        ELSE
+            TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
+    END,
     
     -- Pedidos totales
     pedidos_totales = pedidos_cohete + pedidos_normales,
     
-    -- Ratio de Optimización (RO)
+    -- Ratio de Optimización (RO) - MÉTRICA CLAVE
     ratio_optimizacion = ROUND(km_didi_app / NULLIF(km_google_maps, 0), 2),
     
-    -- Utilidad Neta (desgaste bici = $124/km)
-    utilidad_neta = ingreso_bruto - gasto_extra - (km_google_maps * 124),
+    -- Utilidad Neta (FLUJO DE CAJA PURO - SIN DESGASTE)
+    utilidad_neta = ingreso_bruto - gasto_extra,
     
     -- Ingreso por KM real
     ingreso_por_km_real = ROUND(
@@ -109,20 +113,24 @@ SET
     
     -- Velocidad de Enganche (min/pedido)
     velocidad_enganche = ROUND(
-        TIMESTAMPDIFF(MINUTE, 
-            CONCAT(fecha, ' ', h_inicio), 
-            CONCAT(fecha, ' ', h_fin)
-        ) / NULLIF(pedidos_cohete + pedidos_normales, 0),
+        CASE
+            WHEN h_fin >= h_inicio THEN
+                TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin))
+            ELSE
+                TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin))
+        END / NULLIF(pedidos_cohete + pedidos_normales, 0),
         1
     ),
     
     -- Velocidad Operativa (km/h)
     velocidad_operativa = ROUND(
         km_google_maps / NULLIF(
-            TIMESTAMPDIFF(MINUTE, 
-                CONCAT(fecha, ' ', h_inicio), 
-                CONCAT(fecha, ' ', h_fin)
-            ) / 60.0,
+            CASE
+                WHEN h_fin >= h_inicio THEN
+                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
+                ELSE
+                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
+            END,
             0
         ),
         2
@@ -130,11 +138,13 @@ SET
     
     -- Salario Efectivo por Hora
     salario_efectivo_hora = ROUND(
-        (ingreso_bruto - gasto_extra - (km_google_maps * 124)) / NULLIF(
-            TIMESTAMPDIFF(MINUTE, 
-                CONCAT(fecha, ' ', h_inicio), 
-                CONCAT(fecha, ' ', h_fin)
-            ) / 60.0,
+        (ingreso_bruto - gasto_extra) / NULLIF(
+            CASE
+                WHEN h_fin >= h_inicio THEN
+                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
+                ELSE
+                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
+            END,
             0
         ),
         2
@@ -169,9 +179,9 @@ SELECT 'INGRESO TOTAL', CONCAT('$', FORMAT(SUM(ingreso_bruto), 0)) FROM registro
 UNION ALL
 SELECT 'GASTOS TOTALES', CONCAT('$', FORMAT(SUM(gasto_extra), 0)) FROM registros_didi
 UNION ALL
-SELECT 'DESGASTE BICI', CONCAT('$', FORMAT(SUM(km_google_maps * 124), 0)) FROM registros_didi
-UNION ALL
 SELECT 'UTILIDAD NETA', CONCAT('$', FORMAT(SUM(utilidad_neta), 0)) FROM registros_didi
+UNION ALL
+SELECT 'ROI OPERATIVO', CONCAT(FORMAT((SUM(utilidad_neta) / SUM(gasto_extra)) * 100, 0), '%') FROM registros_didi
 UNION ALL
 SELECT 'SALARIO/HORA PROM', CONCAT('$', FORMAT(AVG(salario_efectivo_hora), 0)) FROM registros_didi;
 
@@ -309,10 +319,9 @@ ORDER BY salario_efectivo_hora DESC;
 SELECT 
     FORMAT(SUM(ingreso_bruto), 0) AS ingreso_total,
     FORMAT(SUM(gasto_extra), 0) AS gastos_totales,
-    FORMAT(SUM(km_google_maps * 124), 0) AS desgaste_total,
     FORMAT(SUM(utilidad_neta), 0) AS utilidad_neta_total,
     CONCAT(
-        ROUND((SUM(utilidad_neta) / (SUM(gasto_extra) + SUM(km_google_maps * 124))) * 100, 2),
+        ROUND((SUM(utilidad_neta) / SUM(gasto_extra)) * 100, 0),
         '%'
     ) AS roi_porcentaje
 FROM registros_didi;
@@ -329,40 +338,5 @@ GROUP BY WEEK(fecha)
 ORDER BY MIN(fecha);
 
 -- ============================================================================
--- MÉTRICAS CLAVE PARA TESIS
--- ============================================================================
-
--- ¿Cuál es el RO promedio por eficiencia de cohetes?
-SELECT 
-    CASE 
-        WHEN eficiencia_cohete_pct >= 90 THEN '≥90%'
-        WHEN eficiencia_cohete_pct >= 70 THEN '70-89%'
-        WHEN eficiencia_cohete_pct >= 50 THEN '50-69%'
-        ELSE '<50%'
-    END AS rango_cohetes,
-    COUNT(*) AS dias,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(ingreso_por_km_real), 0) AS ingreso_km_promedio
-FROM registros_didi
-WHERE eficiencia_cohete_pct IS NOT NULL
-GROUP BY rango_cohetes
-ORDER BY AVG(eficiencia_cohete_pct) DESC;
-
--- Correlación: ¿Más KM reales = Mayor RO?
-SELECT 
-    CASE 
-        WHEN km_google_maps >= 80 THEN '≥80 km'
-        WHEN km_google_maps >= 60 THEN '60-79 km'
-        WHEN km_google_maps >= 40 THEN '40-59 km'
-        ELSE '<40 km'
-    END AS rango_km,
-    COUNT(*) AS dias,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(velocidad_operativa), 1) AS vel_promedio_km_h
-FROM registros_didi
-GROUP BY rango_km
-ORDER BY AVG(km_google_maps) DESC;
-
--- ============================================================================
--- FIN DEL ANÁLISIS
+-- FIN DEL ANÁLISIS - DATA CRUDA REAL SIN AJUSTES
 -- ============================================================================
