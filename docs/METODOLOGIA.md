@@ -18,12 +18,12 @@ Esta **asimetría de información** genera una oportunidad de arbitraje cuantifi
 
 ### Tipo de Estudio
 - **Observacional descriptivo**
-- **Longitudinal** (25 días consecutivos de operación)
+- **Longitudinal** (24 días consecutivos de operación)
 - **Caso único** (1 operador)
 
 ### Población y Muestra
 - **Población:** Repartidores en bicicleta de DiDi Food en Bogotá
-- **Muestra:** N=25 días operativos (censo completo del periodo)
+- **Muestra:** N=24 días operativos (censo completo del periodo)
 - **Periodo:** 5 diciembre 2025 - 30 enero 2026
 - **Zona:** Kennedy, Salitre, Fontibón
 
@@ -215,7 +215,7 @@ assert ingreso_bruto > 0
 
 ### Software Utilizado
 - **MySQL 8.0:** Almacenamiento y análisis de datos
-- **Python 3.8:** Limpieza y validación de datos
+- **Python 3.14:** Limpieza y validación de datos
 - **Excel:** Entrada inicial de datos
 
 ### Pipeline de Datos
@@ -245,4 +245,4 @@ Para futuras extensiones del estudio:
 
 **Documento de Metodología v1.0**  
 **Fecha:** Enero 2026  
-**Autor:** [Tu Nombre]
+**Autor:** Iván Felipe Castro Pinzón
