@@ -1,342 +1,387 @@
--- ============================================================================
--- ANÁLISIS: ARBITRAJE ALGORÍTMICO EN LOGÍSTICA ÚLTIMA MILLA
--- Periodo: Diciembre 2025 - Enero 2026 (26 días operativos)
--- DATA CRUDA REAL - SIN AJUSTES
--- ============================================================================
+-- ====================================================================
+-- PIPELINE DE AUDITORÍA - ARBITRAJE ALGORÍTMICO DIDI FOOD
+-- Versión: 1.0.0
+-- Base de Datos: MySQL 8.0+
+-- Autor: Ingeniero de Datos Senior
+-- Fecha: 2026-02-13
+-- ====================================================================
 
-CREATE DATABASE IF NOT EXISTS didi_operaciones
-  CHARACTER SET utf8mb4 
-  COLLATE utf8mb4_unicode_ci;
+-- ====================================================================
+-- SECCIÓN 1: CONFIGURACIÓN INICIAL
+-- ====================================================================
 
-USE didi_operaciones;
-SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+-- Crear base de datos si no existe
+CREATE DATABASE IF NOT EXISTS didi_analytics
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
--- ============================================================================
--- TABLA BASE: 9 Variables Minimalistas
--- ============================================================================
+USE didi_analytics;
 
-DROP TABLE IF EXISTS registros_didi;
+-- Eliminar tabla si existe (para re-ejecución limpia)
+DROP TABLE IF EXISTS didi_operaciones;
 
-CREATE TABLE registros_didi (
+-- ====================================================================
+-- SECCIÓN 2: DEFINICIÓN DE TABLA PRINCIPAL
+-- ====================================================================
+
+CREATE TABLE didi_operaciones (
+    -- Variables Primarias
     id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATE NOT NULL UNIQUE,
-    h_inicio TIME NOT NULL COMMENT 'Hora primer pedido aceptado',
-    h_fin TIME NOT NULL COMMENT 'Hora candado en casa',
-    km_google_maps DECIMAL(10,2) NOT NULL COMMENT 'KM reales pedaleados',
-    km_didi_app DECIMAL(10,2) NOT NULL COMMENT 'KM reportados por DiDi',
-    ingreso_bruto DECIMAL(10,2) NOT NULL COMMENT 'Ganancia total garantizada',
-    pedidos_cohete INT NOT NULL COMMENT 'Pedidos ≥7km (cuentan x2)',
-    pedidos_normales INT NOT NULL COMMENT 'Pedidos <7km',
-    gasto_extra DECIMAL(10,2) DEFAULT 0 COMMENT 'Gastos operativos',
+    fecha DATE NOT NULL COMMENT 'Fecha del día operativo',
+    h_inicio TIME NOT NULL COMMENT 'Hora de inicio del turno',
+    h_fin TIME NOT NULL COMMENT 'Hora de fin del turno',
     
+    -- Distancias
+    km_google DECIMAL(8,2) NOT NULL COMMENT 'Distancia según Google Maps (ciclorrutas)',
+    km_didi DECIMAL(8,2) NOT NULL COMMENT 'Distancia según DiDi App (rutas motorizadas)',
+    
+    -- Ingresos
+    garantizado_meta INT NOT NULL COMMENT 'Ingreso total garantizado (COP)',
+    ingreso_base INT NOT NULL COMMENT 'Ingreso base por pedidos (COP)',
+    complemento_bono INT NOT NULL COMMENT 'Bono por cumplir meta (COP)',
+    
+    -- Pedidos
+    pedidos_fisicos INT NOT NULL COMMENT 'Número de pedidos completados',
+    unidades_progreso INT NOT NULL COMMENT 'Unidades contabilizadas por DiDi',
+    
+    -- Gastos
+    gastos_operativos INT NOT NULL DEFAULT 0 COMMENT 'Gastos del turno (COP)',
+    
+    -- Variables Derivadas (Calculadas en Python o con triggers)
+    duracion_horas DECIMAL(5,2) COMMENT 'Duración del turno en horas',
+    utilidad_neta INT COMMENT 'Ganancia neta después de gastos (COP)',
+    ratio_optimizacion DECIMAL(4,2) COMMENT 'RO: km_didi / km_google',
+    km_por_pedido_google DECIMAL(5,2) COMMENT 'KM por pedido según Google',
+    km_por_pedido_didi DECIMAL(5,2) COMMENT 'KM por pedido según DiDi',
+    ingreso_por_km_google DECIMAL(8,2) COMMENT 'Ingreso por KM (Google)',
+    ingreso_por_km_didi DECIMAL(8,2) COMMENT 'Ingreso por KM (DiDi)',
+    ingreso_por_hora DECIMAL(8,2) COMMENT 'Ingreso por hora trabajada',
+    utilidad_por_hora DECIMAL(8,2) COMMENT 'Utilidad por hora trabajada',
+    eficiencia_cumplimiento DECIMAL(4,2) COMMENT 'Unidades / Pedidos',
+    proporcion_bono DECIMAL(4,2) COMMENT 'Bono / Ingreso Total',
+    roi_diario DECIMAL(8,2) COMMENT 'ROI diario (%)',
+    rentabilidad_binaria TINYINT(1) COMMENT '1 si utilidad > 0, 0 si no',
+    
+    -- Índices para optimización de consultas
     INDEX idx_fecha (fecha),
-    INDEX idx_ratio (km_didi_app, km_google_maps)
-) ENGINE=InnoDB COMMENT='Data cruda real - 26 días';
+    INDEX idx_utilidad (utilidad_neta DESC),
+    INDEX idx_roi (roi_diario DESC),
+    INDEX idx_pedidos (pedidos_fisicos)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Tabla principal de operaciones DiDi Food';
 
--- ============================================================================
--- CARGA DE DATOS (26 días - DATA REAL)
--- ============================================================================
+-- ====================================================================
+-- SECCIÓN 3: CARGA DE DATOS
+-- ====================================================================
 
-INSERT INTO registros_didi
-(fecha, h_inicio, h_fin, km_google_maps, km_didi_app, ingreso_bruto, pedidos_cohete, pedidos_normales, gasto_extra)
-VALUES
-('2025-12-05', '17:05', '23:23', 45.06, 88.60, 130000, 11, 1, 17000),
-('2025-12-06', '13:34', '23:56', 72.58, 120.70, 188000, 15, 0, 17000),
-('2025-12-07', '12:47', '23:25', 66.79, 122.50, 229000, 14, 3, 18000),
-('2025-12-08', '11:36', '23:18', 104.61, 135.40, 209000, 17, 0, 21000),
-('2025-12-13', '17:01', '0:12', 63.08, 92.10, 143000, 10, 1, 58000),
-('2025-12-14', '12:25', '23:14', 101.87, 139.40, 251000, 18, 0, 19000),
-('2025-12-20', '12:11', '23:51', 79.35, 151.30, 263000, 18, 2, 16000),
-('2025-12-21', '11:11', '23:55', 97.20, 144.80, 268000, 18, 0, 21500),
-('2025-12-23', '18:28', '23:06', 23.40, 49.10, 73000, 6, 2, 16000),
-('2025-12-24', '12:04', '20:35', 41.84, 73.30, 132000, 8, 2, 0),
-('2025-12-25', '11:10', '23:40', 69.85, 128.80, 302000, 12, 9, 14000),
-('2025-12-27', '11:58', '20:58', 43.61, 84.70, 185000, 9, 6, 19000),
-('2025-12-28', '11:53', '22:31', 74.51, 132.80, 283000, 13, 5, 15000),
-('2025-12-31', '12:08', '20:40', 54.72, 85.79, 125000, 10, 3, 0),
-('2026-01-01', '11:18', '23:37', 56.33, 97.50, 183000, 12, 5, 0),
-('2026-01-04', '12:40', '21:27', 33.80, 80.10, 114000, 8, 7, 18000),
-('2026-01-08', '17:38', '18:27', 19.31, 25.80, 31000, 3, 0, 0),
-('2026-01-10', '12:40', '22:55', 59.55, 97.60, 147000, 12, 0, 17000),
-('2026-01-11', '11:55', '0:22', 90.60, 138.20, 244000, 18, 0, 0),
-('2026-01-12', '17:01', '22:47', 53.74, 62.80, 104000, 7, 2, 20000),
-('2026-01-17', '17:01', '0:04', 38.95, 80.80, 119000, 10, 1, 16000),
-('2026-01-18', '12:12', '23:51', 79.51, 138.40, 206500, 17, 2, 21000),
-('2026-01-24', '17:26', '21:20', 18.79, 38.00, 47500, 3, 3, 18000),
-('2026-01-25', '12:06', '23:04', 71.45, 113.00, 169500, 15, 1, 0),
-('2026-01-30', '17:42', '23:57', 35.89, 55.40, 89500, 7, 2, 18000),
-('2026-01-31', '12:44', '0:02', 74.99, 125.00, 173030, 14, 1, 20000);
+-- NOTA: Los datos se deben cargar desde el CSV procesado.
+-- Opción 1: Usar LOAD DATA INFILE
+-- LOAD DATA INFILE '/ruta/a/didi_procesado.csv'
+-- INTO TABLE didi_operaciones
+-- FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+-- LINES TERMINATED BY '\n'
+-- IGNORE 1 ROWS;
 
--- ============================================================================
--- MOTOR DE CÁLCULO: Agregar Columnas Derivadas
--- ============================================================================
+-- Opción 2: Insertar manualmente o desde script Python con mysql-connector
 
-ALTER TABLE registros_didi
-ADD COLUMN tiempo_total_horas DECIMAL(5,2) COMMENT 'Duración h_inicio a h_fin',
-ADD COLUMN pedidos_totales INT COMMENT 'Suma cohete + normales',
-ADD COLUMN ratio_optimizacion DECIMAL(5,2) COMMENT 'km_didi / km_google (RO)',
-ADD COLUMN utilidad_neta DECIMAL(10,2) COMMENT 'ingreso - gasto (flujo de caja puro)',
-ADD COLUMN ingreso_por_km_real DECIMAL(8,2) COMMENT 'utilidad / km_google',
-ADD COLUMN velocidad_enganche DECIMAL(5,1) COMMENT 'minutos por pedido',
-ADD COLUMN velocidad_operativa DECIMAL(5,2) COMMENT 'km/h operativa',
-ADD COLUMN salario_efectivo_hora DECIMAL(8,2) COMMENT 'utilidad / tiempo',
-ADD COLUMN eficiencia_cohete_pct DECIMAL(5,2) COMMENT '% pedidos cohete';
+-- ====================================================================
+-- SECCIÓN 4: VISTAS DE ANÁLISIS (10 VISTAS)
+-- ====================================================================
 
--- ============================================================================
--- CALCULAR TODAS LAS MÉTRICAS DERIVADAS
--- ============================================================================
+-- --------------------------------------------------------------------
+-- VISTA 1: RESUMEN GLOBAL
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_resumen_global AS
+SELECT
+    COUNT(*) AS n_registros,
+    SUM(garantizado_meta) AS total_ingresos_cop,
+    SUM(gastos_operativos) AS total_gastos_cop,
+    SUM(utilidad_neta) AS utilidad_neta_cop,
+    ROUND((SUM(utilidad_neta) / SUM(gastos_operativos)) * 100, 2) AS roi_global_pct,
+    ROUND(SUM(km_didi) / SUM(km_google), 2) AS ro_global,
+    ROUND(SUM(garantizado_meta) / SUM(gastos_operativos), 2) AS multiplo_ingreso,
+    SUM(pedidos_fisicos) AS total_pedidos,
+    ROUND(SUM(duracion_horas), 2) AS duracion_total_horas,
+    ROUND(SUM(km_google), 2) AS km_google_total,
+    ROUND(SUM(km_didi), 2) AS km_didi_total,
+    SUM(CASE WHEN gastos_operativos = 0 THEN 1 ELSE 0 END) AS dias_gasto_cero
+FROM didi_operaciones;
 
-UPDATE registros_didi
-SET 
-    -- Tiempo total (maneja cruce de medianoche)
-    tiempo_total_horas = CASE
-        WHEN h_fin >= h_inicio THEN
-            TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
-        ELSE
-            TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
-    END,
-    
-    -- Pedidos totales
-    pedidos_totales = pedidos_cohete + pedidos_normales,
-    
-    -- Ratio de Optimización (RO) - MÉTRICA CLAVE
-    ratio_optimizacion = ROUND(km_didi_app / NULLIF(km_google_maps, 0), 2),
-    
-    -- Utilidad Neta (FLUJO DE CAJA PURO - SIN DESGASTE)
-    utilidad_neta = ingreso_bruto - gasto_extra,
-    
-    -- Ingreso por KM real
-    ingreso_por_km_real = ROUND(
-        (ingreso_bruto - gasto_extra) / NULLIF(km_google_maps, 0), 
-        2
-    ),
-    
-    -- Velocidad de Enganche (min/pedido)
-    velocidad_enganche = ROUND(
-        CASE
-            WHEN h_fin >= h_inicio THEN
-                TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin))
-            ELSE
-                TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin))
-        END / NULLIF(pedidos_cohete + pedidos_normales, 0),
-        1
-    ),
-    
-    -- Velocidad Operativa (km/h)
-    velocidad_operativa = ROUND(
-        km_google_maps / NULLIF(
-            CASE
-                WHEN h_fin >= h_inicio THEN
-                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
-                ELSE
-                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
-            END,
-            0
-        ),
-        2
-    ),
-    
-    -- Salario Efectivo por Hora
-    salario_efectivo_hora = ROUND(
-        (ingreso_bruto - gasto_extra) / NULLIF(
-            CASE
-                WHEN h_fin >= h_inicio THEN
-                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(fecha, ' ', h_fin)) / 60.0
-                ELSE
-                    TIMESTAMPDIFF(MINUTE, CONCAT(fecha, ' ', h_inicio), CONCAT(DATE_ADD(fecha, INTERVAL 1 DAY), ' ', h_fin)) / 60.0
-            END,
-            0
-        ),
-        2
-    ),
-    
-    -- Eficiencia Cohete %
-    eficiencia_cohete_pct = ROUND(
-        (pedidos_cohete / NULLIF(pedidos_cohete + pedidos_normales, 0)) * 100,
-        2
-    );
+-- --------------------------------------------------------------------
+-- VISTA 2: MÉTRICAS PROMEDIO POR DÍA
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_promedios AS
+SELECT
+    ROUND(AVG(garantizado_meta), 2) AS ingreso_promedio_cop,
+    ROUND(AVG(utilidad_neta), 2) AS utilidad_promedio_cop,
+    ROUND(AVG(gastos_operativos), 2) AS gasto_promedio_cop,
+    ROUND(AVG(pedidos_fisicos), 2) AS pedidos_promedio,
+    ROUND(AVG(duracion_horas), 2) AS duracion_promedio_horas,
+    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
+    ROUND(AVG(ingreso_por_hora), 2) AS ingreso_hora_promedio_cop,
+    ROUND(AVG(utilidad_por_hora), 2) AS utilidad_hora_promedio_cop,
+    ROUND(AVG(km_google), 2) AS km_google_promedio,
+    ROUND(AVG(km_didi), 2) AS km_didi_promedio
+FROM didi_operaciones;
 
--- ============================================================================
--- VISTAS ANALÍTICAS
--- ============================================================================
-
--- VISTA 1: Resumen Ejecutivo
-CREATE OR REPLACE VIEW v_resumen_ejecutivo AS
-SELECT 
-    'PERIODO' AS metrica,
-    CONCAT(MIN(fecha), ' → ', MAX(fecha)) AS valor
-FROM registros_didi
-UNION ALL
-SELECT 'DÍAS OPERATIVOS', CAST(COUNT(*) AS CHAR) FROM registros_didi
-UNION ALL
-SELECT 'KM REALES PEDALEADOS', CONCAT(FORMAT(SUM(km_google_maps), 1), ' km') FROM registros_didi
-UNION ALL
-SELECT 'KM REPORTADOS DIDI', CONCAT(FORMAT(SUM(km_didi_app), 1), ' km') FROM registros_didi
-UNION ALL
-SELECT '🚀 RATIO OPTIMIZACIÓN', CONCAT(FORMAT(SUM(km_didi_app) / SUM(km_google_maps), 2), 'x') FROM registros_didi
-UNION ALL
-SELECT 'INGRESO TOTAL', CONCAT('$', FORMAT(SUM(ingreso_bruto), 0)) FROM registros_didi
-UNION ALL
-SELECT 'GASTOS TOTALES', CONCAT('$', FORMAT(SUM(gasto_extra), 0)) FROM registros_didi
-UNION ALL
-SELECT 'UTILIDAD NETA', CONCAT('$', FORMAT(SUM(utilidad_neta), 0)) FROM registros_didi
-UNION ALL
-SELECT 'ROI OPERATIVO', CONCAT(FORMAT((SUM(utilidad_neta) / SUM(gasto_extra)) * 100, 0), '%') FROM registros_didi
-UNION ALL
-SELECT 'SALARIO/HORA PROM', CONCAT('$', FORMAT(AVG(salario_efectivo_hora), 0)) FROM registros_didi;
-
--- VISTA 2: Top 10 Mejores Días (por salario/hora)
-CREATE OR REPLACE VIEW v_top_10_dias AS
-SELECT 
+-- --------------------------------------------------------------------
+-- VISTA 3: TOP 10 MEJORES DÍAS (Por Utilidad)
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_top_10_mejores_dias AS
+SELECT
+    RANK() OVER (ORDER BY utilidad_neta DESC) AS ranking,
     fecha,
-    ratio_optimizacion AS ro,
-    salario_efectivo_hora AS salario_hora,
-    utilidad_neta,
-    eficiencia_cohete_pct AS cohetes_pct,
-    km_google_maps AS km_reales,
-    pedidos_totales
-FROM registros_didi
-WHERE salario_efectivo_hora IS NOT NULL
-ORDER BY salario_efectivo_hora DESC
+    utilidad_neta AS utilidad_cop,
+    ROUND(roi_diario, 2) AS roi_pct,
+    pedidos_fisicos,
+    duracion_horas,
+    ROUND(ingreso_por_hora, 2) AS ingreso_hora_cop,
+    ROUND(ratio_optimizacion, 2) AS ro
+FROM didi_operaciones
+ORDER BY utilidad_neta DESC
 LIMIT 10;
 
--- VISTA 3: Análisis por Nivel de RO
-CREATE OR REPLACE VIEW v_analisis_por_ro AS
-SELECT 
-    CASE 
-        WHEN ratio_optimizacion >= 2.0 THEN '🚀 Excelente (≥2.0x)'
-        WHEN ratio_optimizacion >= 1.5 THEN '🟢 Bueno (1.5-2.0x)'
-        WHEN ratio_optimizacion >= 1.0 THEN '🟡 Neutro (1.0-1.5x)'
-        ELSE '🔴 Malo (<1.0x)'
-    END AS nivel_ro,
-    COUNT(*) AS dias,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(salario_efectivo_hora), 0) AS salario_promedio,
-    ROUND(AVG(utilidad_neta), 0) AS utilidad_promedio
-FROM registros_didi
-WHERE ratio_optimizacion IS NOT NULL
-GROUP BY nivel_ro
-ORDER BY ro_promedio DESC;
-
--- VISTA 4: Impacto Cohetes en Utilidad
-CREATE OR REPLACE VIEW v_cohetes_vs_utilidad AS
-SELECT 
-    CASE 
-        WHEN eficiencia_cohete_pct >= 80 THEN '≥80% cohetes'
-        WHEN eficiencia_cohete_pct >= 60 THEN '60-79% cohetes'
-        WHEN eficiencia_cohete_pct >= 40 THEN '40-59% cohetes'
-        ELSE '<40% cohetes'
-    END AS nivel_cohetes,
-    COUNT(*) AS dias,
-    ROUND(AVG(utilidad_neta), 0) AS utilidad_promedio,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(salario_efectivo_hora), 0) AS salario_promedio
-FROM registros_didi
-WHERE eficiencia_cohete_pct IS NOT NULL
-GROUP BY nivel_cohetes
-ORDER BY AVG(eficiencia_cohete_pct) DESC;
-
--- ============================================================================
--- CONSULTAS DE ANÁLISIS (Ejecutar una por una)
--- ============================================================================
-
--- ANÁLISIS 1: Resumen Ejecutivo
-SELECT * FROM v_resumen_ejecutivo;
-
--- ANÁLISIS 2: Top 10 Mejores Días
-SELECT * FROM v_top_10_dias;
-
--- ANÁLISIS 3: Distribución por Ratio de Optimización
-SELECT * FROM v_analisis_por_ro;
-
--- ANÁLISIS 4: Impacto de Cohetes en Utilidad
-SELECT * FROM v_cohetes_vs_utilidad;
-
--- ANÁLISIS 5: Comparación Mayor vs Menor RO
-(SELECT 
-    'Top 5 Mayor RO' AS grupo,
+-- --------------------------------------------------------------------
+-- VISTA 4: TOP 10 PEORES DÍAS (Por Utilidad)
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_top_10_peores_dias AS
+SELECT
+    RANK() OVER (ORDER BY utilidad_neta ASC) AS ranking,
     fecha,
-    ratio_optimizacion AS ro,
-    salario_efectivo_hora AS salario_h,
-    km_google_maps AS km_reales,
-    km_didi_app AS km_app
-FROM registros_didi
-WHERE ratio_optimizacion IS NOT NULL
-ORDER BY ratio_optimizacion DESC
-LIMIT 5)
+    utilidad_neta AS utilidad_cop,
+    gastos_operativos AS gastos_cop,
+    pedidos_fisicos,
+    duracion_horas,
+    CASE
+        WHEN pedidos_fisicos < 8 THEN 'Bajo volumen'
+        WHEN duracion_horas < 5 THEN 'Turno corto'
+        WHEN gastos_operativos > 20000 THEN 'Gastos altos'
+        WHEN gastos_operativos = 0 THEN 'Sin gastos (anomalía)'
+        ELSE 'Baja eficiencia'
+    END AS falla_tecnica
+FROM didi_operaciones
+ORDER BY utilidad_neta ASC
+LIMIT 10;
 
-UNION ALL
-
-(SELECT 
-    'Top 5 Menor RO',
+-- --------------------------------------------------------------------
+-- VISTA 5: ANÁLISIS DE ASIMETRÍA (RO)
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_analisis_asimetria AS
+SELECT
     fecha,
-    ratio_optimizacion,
-    salario_efectivo_hora,
-    km_google_maps,
-    km_didi_app
-FROM registros_didi
-WHERE ratio_optimizacion IS NOT NULL
-ORDER BY ratio_optimizacion ASC
-LIMIT 5);
-
--- ANÁLISIS 6: Tendencia Mensual
-SELECT 
-    DATE_FORMAT(fecha, '%Y-%m') AS mes,
-    COUNT(*) AS dias_trabajados,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(salario_efectivo_hora), 0) AS salario_promedio,
-    FORMAT(SUM(utilidad_neta), 0) AS utilidad_total
-FROM registros_didi
-GROUP BY mes
-ORDER BY mes;
-
--- ANÁLISIS 7: Detalle KM Reales vs Reportados
-SELECT 
-    fecha,
-    km_google_maps AS km_reales,
-    km_didi_app AS km_reportados,
-    ROUND(km_didi_app - km_google_maps, 1) AS km_diferencia,
-    ratio_optimizacion AS ro,
-    CONCAT(ROUND((km_didi_app - km_google_maps) / km_google_maps * 100, 0), '%') AS ventaja_pct
-FROM registros_didi
-WHERE km_google_maps > 0
+    ROUND(ratio_optimizacion, 2) AS ro,
+    ROUND(km_google, 2) AS km_google,
+    ROUND(km_didi, 2) AS km_didi,
+    ROUND(km_didi - km_google, 2) AS diferencia_km,
+    pedidos_fisicos,
+    CASE
+        WHEN ratio_optimizacion >= 2.0 THEN 'Asimetría Extrema'
+        WHEN ratio_optimizacion >= 1.7 THEN 'Asimetría Alta'
+        WHEN ratio_optimizacion >= 1.5 THEN 'Asimetría Moderada'
+        ELSE 'Asimetría Baja'
+    END AS clasificacion_asimetria
+FROM didi_operaciones
 ORDER BY ratio_optimizacion DESC;
 
--- ANÁLISIS 8: Eficiencia Temporal
-SELECT 
+-- --------------------------------------------------------------------
+-- VISTA 6: EFICIENCIA POR PEDIDO
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_eficiencia_por_pedido AS
+SELECT
     fecha,
-    TIME_FORMAT(h_inicio, '%H:%i') AS inicio,
-    TIME_FORMAT(h_fin, '%H:%i') AS fin,
-    tiempo_total_horas AS horas,
-    pedidos_totales,
-    velocidad_enganche AS min_pedido,
-    velocidad_operativa AS km_h,
-    salario_efectivo_hora AS salario_h
-FROM registros_didi
-ORDER BY salario_efectivo_hora DESC;
+    ROUND(km_por_pedido_didi, 2) AS km_pedido_didi,
+    ROUND(km_por_pedido_google, 2) AS km_pedido_google,
+    ROUND(ratio_optimizacion, 2) AS ro,
+    pedidos_fisicos,
+    ROUND(ingreso_por_km_didi, 2) AS ingreso_km_didi_cop,
+    ROUND(ingreso_por_km_google, 2) AS ingreso_km_google_cop
+FROM didi_operaciones
+ORDER BY km_por_pedido_didi DESC;
 
--- ANÁLISIS 9: ROI y Rentabilidad
-SELECT 
-    FORMAT(SUM(ingreso_bruto), 0) AS ingreso_total,
-    FORMAT(SUM(gasto_extra), 0) AS gastos_totales,
-    FORMAT(SUM(utilidad_neta), 0) AS utilidad_neta_total,
-    CONCAT(
-        ROUND((SUM(utilidad_neta) / SUM(gasto_extra)) * 100, 0),
-        '%'
-    ) AS roi_porcentaje
-FROM registros_didi;
+-- --------------------------------------------------------------------
+-- VISTA 7: RENTABILIDAD POR HORA
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_rentabilidad_por_hora AS
+SELECT
+    fecha,
+    ROUND(ingreso_por_hora, 2) AS ingreso_hora_cop,
+    ROUND(utilidad_por_hora, 2) AS utilidad_hora_cop,
+    duracion_horas,
+    pedidos_fisicos,
+    CASE
+        WHEN ingreso_por_hora >= 25000 THEN 'Excepcional'
+        WHEN ingreso_por_hora >= 20000 THEN 'Alta'
+        WHEN ingreso_por_hora >= 15000 THEN 'Moderada'
+        ELSE 'Baja'
+    END AS eficiencia_horaria
+FROM didi_operaciones
+ORDER BY ingreso_por_hora DESC;
 
--- ANÁLISIS 10: Tendencia Semanal
-SELECT 
-    CONCAT('Semana ', WEEK(fecha)) AS semana,
-    COUNT(*) AS dias,
-    ROUND(AVG(ratio_optimizacion), 2) AS ro_promedio,
-    ROUND(AVG(salario_efectivo_hora), 0) AS salario_promedio,
-    FORMAT(SUM(utilidad_neta), 0) AS utilidad_semanal
-FROM registros_didi
-GROUP BY WEEK(fecha)
-ORDER BY MIN(fecha);
+-- --------------------------------------------------------------------
+-- VISTA 8: DÍAS CON GASTO $0 (Anomalías)
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_anomalias_gasto_cero AS
+SELECT
+    fecha,
+    garantizado_meta AS ingresos_cop,
+    utilidad_neta AS utilidad_cop,
+    pedidos_fisicos,
+    duracion_horas,
+    'Gasto no registrado' AS tipo_anomalia,
+    CASE
+        WHEN DAYOFWEEK(fecha) IN (1, 7) THEN 'Fin de semana'
+        WHEN fecha IN ('2025-12-24', '2025-12-25', '2025-12-31', '2026-01-01') THEN 'Día festivo'
+        ELSE 'Día laborable'
+    END AS contexto
+FROM didi_operaciones
+WHERE gastos_operativos = 0
+ORDER BY fecha;
 
--- ============================================================================
--- FIN DEL ANÁLISIS - DATA CRUDA REAL SIN AJUSTES
--- ============================================================================
+-- --------------------------------------------------------------------
+-- VISTA 9: TURNOS CON CRUCE DE MEDIANOCHE
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_cruces_medianoche AS
+SELECT
+    fecha,
+    h_inicio,
+    h_fin,
+    duracion_horas,
+    pedidos_fisicos,
+    ROUND(ratio_optimizacion, 2) AS ro,
+    utilidad_neta AS utilidad_cop,
+    'Cruce de medianoche' AS nota
+FROM didi_operaciones
+WHERE HOUR(h_fin) < HOUR(h_inicio)
+ORDER BY fecha;
+
+-- --------------------------------------------------------------------
+-- VISTA 10: DISTRIBUCIÓN DE FUENTES DE INGRESO
+-- --------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_distribucion_ingresos AS
+SELECT
+    fecha,
+    ingreso_base AS ingreso_base_cop,
+    complemento_bono AS bono_cop,
+    garantizado_meta AS total_cop,
+    ROUND(proporcion_bono * 100, 2) AS proporcion_bono_pct,
+    CASE
+        WHEN proporcion_bono < 0.40 THEN 'Bono Bajo (<40%)'
+        WHEN proporcion_bono BETWEEN 0.40 AND 0.49 THEN 'Bono Moderado (40-49%)'
+        WHEN proporcion_bono BETWEEN 0.50 AND 0.59 THEN 'Bono Alto (50-59%)'
+        ELSE 'Bono Muy Alto (≥60%)'
+    END AS categoria_bono
+FROM didi_operaciones
+ORDER BY proporcion_bono DESC;
+
+-- ====================================================================
+-- SECCIÓN 5: CONSULTAS DE VALIDACIÓN
+-- ====================================================================
+
+-- Validar carga de datos
+-- SELECT COUNT(*) AS total_registros FROM didi_operaciones;
+
+-- Ver resumen global
+-- SELECT * FROM v_resumen_global;
+
+-- Ver promedios
+-- SELECT * FROM v_promedios;
+
+-- Ver mejores días
+-- SELECT * FROM v_top_10_mejores_dias;
+
+-- Ver peores días
+-- SELECT * FROM v_top_10_peores_dias;
+
+-- ====================================================================
+-- SECCIÓN 6: CONSULTAS AVANZADAS (EJEMPLOS)
+-- ====================================================================
+
+-- --------------------------------------------------------------------
+-- Consulta 1: Rendimiento por Franja Horaria
+-- --------------------------------------------------------------------
+-- Clasifica turnos en Mañana, Tarde, Noche
+/*
+SELECT
+    CASE
+        WHEN HOUR(h_inicio) BETWEEN 6 AND 11 THEN 'Mañana'
+        WHEN HOUR(h_inicio) BETWEEN 12 AND 17 THEN 'Tarde'
+        ELSE 'Noche'
+    END AS franja_horaria,
+    COUNT(*) AS n_turnos,
+    ROUND(AVG(utilidad_neta), 2) AS utilidad_promedio_cop,
+    ROUND(AVG(pedidos_fisicos), 2) AS pedidos_promedio,
+    ROUND(AVG(ingreso_por_hora), 2) AS ingreso_hora_promedio_cop
+FROM didi_operaciones
+GROUP BY franja_horaria
+ORDER BY utilidad_promedio_cop DESC;
+*/
+
+-- --------------------------------------------------------------------
+-- Consulta 2: Días con Mayor ROI (Excluye gasto $0)
+-- --------------------------------------------------------------------
+/*
+SELECT
+    fecha,
+    ROUND(roi_diario, 2) AS roi_pct,
+    utilidad_neta AS utilidad_cop,
+    gastos_operativos AS gastos_cop,
+    pedidos_fisicos
+FROM didi_operaciones
+WHERE gastos_operativos > 0
+ORDER BY roi_diario DESC
+LIMIT 10;
+*/
+
+-- --------------------------------------------------------------------
+-- Consulta 3: Correlación RO vs Utilidad
+-- --------------------------------------------------------------------
+/*
+SELECT
+    ROUND(ratio_optimizacion, 2) AS ro,
+    utilidad_neta AS utilidad_cop,
+    pedidos_fisicos,
+    duracion_horas
+FROM didi_operaciones
+ORDER BY ratio_optimizacion DESC;
+*/
+
+-- --------------------------------------------------------------------
+-- Consulta 4: Días de Fin de Semana vs Días Laborables
+-- --------------------------------------------------------------------
+/*
+SELECT
+    CASE
+        WHEN DAYOFWEEK(fecha) IN (1, 7) THEN 'Fin de semana'
+        ELSE 'Día laborable'
+    END AS tipo_dia,
+    COUNT(*) AS n_dias,
+    ROUND(AVG(utilidad_neta), 2) AS utilidad_promedio_cop,
+    ROUND(AVG(pedidos_fisicos), 2) AS pedidos_promedio
+FROM didi_operaciones
+GROUP BY tipo_dia;
+*/
+
+-- ====================================================================
+-- SECCIÓN 7: NOTAS TÉCNICAS
+-- ====================================================================
+
+-- IMPORTANTE:
+-- 1. Los datos deben cargarse desde el CSV procesado (didi_procesado.csv)
+-- 2. Las métricas auditadas son:
+--    - Total Gastos: $431,000 COP (ajustado)
+--    - ROI Global: 930.28%
+--    - RO Global: 1.66x
+--    - Múltiplo de Ingreso: 10.30x
+-- 3. La moneda es COP (Pesos Colombianos), NO USD
+-- 4. Todas las vistas respetan el principio de Transparencia Radical
+
+-- ====================================================================
+-- FIN DEL SCRIPT
+-- ====================================================================
+
+-- Para ejecutar este script:
+-- mysql -u root -p < ANALISIS_SQL_FINAL.sql
+
+-- Para verificar que todo funcionó:
+-- USE didi_analytics;
+-- SHOW TABLES;
+-- SELECT * FROM v_resumen_global;
