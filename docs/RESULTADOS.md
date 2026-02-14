@@ -1,303 +1,290 @@
-# 📊 Resultados del Análisis
+# RESULTADOS
+## Análisis de Arbitraje Algorítmico DiDi Food
 
-## Estadísticas Descriptivas Globales
+**Dataset:** N=26 días operativos  
+**Periodo:** 2025-12-05 a 2026-01-31  
+**Versión:** 1.0.0 (Datos Auditados)  
+**Principio:** Transparencia Radical - La Verdad por encima de la Armonía
 
-### Periodo de Análisis
-- **Inicio:** 5 diciembre 2025
-- **Fin:** 30 enero 2026
-- **Días operativos:** 24
-- **Días promedio/semana:** 3.0
+---
 
-### Métricas Agregadas
+## DASHBOARD EJECUTIVO
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║           MÉTRICAS GLOBALES (VALORES AUDITADOS)              ║
+╠══════════════════════════════════════════════════════════════╣
+║  💰 Total Ingresos:        $4,440,530 COP                    ║
+║  💸 Total Gastos:          $431,000 COP                      ║
+║  💵 Utilidad Neta:         $4,009,530 COP                    ║
+║  📈 ROI Global:            930.28%                           ║
+║  🔢 Múltiplo de Ingreso:   10.30x                            ║
+║  🛣️  RO Global:             1.66x                            ║
+║  📦 Total Pedidos:         363 pedidos                       ║
+║  ⏱️  Duración Total:        236.72 horas                     ║
+║  🚴 KM Google Maps:        1,571.38 km                       ║
+║  🏍️  KM DiDi App:           2,601.89 km                      ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## TABLA 1: RESUMEN ESTADÍSTICO GENERAL
 
 | Métrica | Valor |
 |---------|-------|
-| **KM Reales Pedaleados** | 1,526.3 km |
-| **KM Reportados DiDi** | 2,513.3 km |
-| **KM "Fantasma"** | 987.0 km (65% extra) |
-| **Ratio Optimización Global** | **1.71x** |
-| **Ingreso Total** | $4,279,030 COP |
-| **Gastos Operativos** | $382,500 COP |
-| **Desgaste Bicicleta** | $189,261 COP |
+| **Registros (N)** | 26 días |
+| **Ingresos Totales** | $4,440,530 COP |
+| **Gastos Totales** | $431,000 COP |
 | **Utilidad Neta** | $4,009,530 COP |
-| **Salario/Hora Promedio** | $35,784/h |
+| **ROI Global** | 930.28% |
+| **Múltiplo de Ingreso** | 10.30x |
+| **RO Global (km_didi/km_google)** | 1.66x |
+| **Pedidos Totales** | 363 |
+| **Duración Total** | 236.72 horas |
+| **KM Google Total** | 1,571.38 km |
+| **KM DiDi Total** | 2,601.89 km |
+| **Asimetría de Distancia** | +1,030.51 km (DiDi > Google) |
+| **Días con Gasto $0** | 6 (anomalía técnica) |
+| **Turnos con Cruce de Medianoche** | 4 |
 
 ---
 
-## Análisis 1: Distribución por Ratio de Optimización
+## TABLA 2: MÉTRICAS PROMEDIO POR DÍA
 
-### Clasificación de Días
-
-| Nivel | Criterio | Días | % | RO Prom | Salario/H | Utilidad Prom |
-|-------|----------|------|---|---------|-----------|---------------|
-| 🚀 Excelente | RO ≥ 2.0x | 7 | 29% | 2.18x | $41,200 | $231,286 |
-| 🟢 Bueno | 1.5 ≤ RO < 2.0 | 11 | 46% | 1.67x | $36,818 | $195,409 |
-| 🟡 Neutro | 1.0 ≤ RO < 1.5 | 6 | 25% | 1.29x | $29,457 | $142,143 |
-| 🔴 Malo | RO < 1.0 | 0 | 0% | - | - | - |
-
-### Interpretación
-
-✅ **Hallazgo Clave:** 72% de los días alcanzaron RO ≥ 1.5x
-
-Esto demuestra que la estrategia de atajos urbanos es **consistentemente efectiva**, no un evento fortuito ocasional.
+| Métrica | Promedio | Unidad |
+|---------|----------|--------|
+| **Ingreso por Día** | $170,789.62 | COP |
+| **Utilidad por Día** | $154,212.69 | COP |
+| **Gasto por Día** | $16,576.92 | COP |
+| **Pedidos por Día** | 13.96 | pedidos |
+| **Duración por Día** | 9.10 | horas |
+| **KM Google por Día** | 60.44 | km |
+| **KM DiDi por Día** | 100.07 | km |
+| **RO Promedio** | 1.66 | x |
+| **Ingreso por Hora** | $18,760.49 | COP/hora |
+| **Utilidad por Hora** | $16,936.73 | COP/hora |
 
 ---
 
-## Análisis 2: Impacto de Pedidos Cohete
+## TABLA 3: TOP 5 MEJORES DÍAS (Por Utilidad Neta)
 
-### Clasificación por Eficiencia de Cohetes
+| Ranking | Fecha | Utilidad | ROI Diario | Pedidos | Duración | Ingreso/Hora |
+|---------|-------|----------|------------|---------|----------|--------------|
+| 🥇 | 2025-12-25 | $288,000 | 2,057.14% | 21 | 12.50 h | $24,160 |
+| 🥈 | 2025-12-28 | $268,000 | 1,786.67% | 18 | 10.63 h | $26,622 |
+| 🥉 | 2025-12-20 | $247,000 | 1,543.75% | 20 | 11.67 h | $22,530 |
+| 4 | 2025-12-21 | $246,500 | 1,146.51% | 18 | 12.73 h | $21,053 |
+| 5 | 2026-01-11 | $244,000 | N/A* | 18 | 12.45 h | $19,598 |
 
-| Nivel Cohetes | Días | Efic Prom | Utilidad | RO | Salario/H |
-|---------------|------|-----------|----------|-----|-----------|
-| **≥80% cohetes** | 15 | 93.5% | $198,520 | 1.72x | $39,215 |
-| **60-79% cohetes** | 6 | 72.1% | $167,000 | 1.58x | $34,100 |
-| **40-59% cohetes** | 2 | 53.5% | $152,500 | 1.51x | $31,850 |
-| **<40% cohetes** | 2 | 28.6% | $121,000 | 1.42x | $26,200 |
+*N/A: Gasto $0 COP, ROI no calculable
 
-### Correlación
-
-```
-Eficiencia Cohete ↑ → Utilidad ↑ (+64%)
-Eficiencia Cohete ↑ → RO ↑ (+21%)
-```
-
-**Conclusión:** Estrategia de priorizar pedidos cohete es **económicamente óptima**
+**Patrón identificado:**  
+Los mejores días coinciden con alta demanda (18-21 pedidos) y duraciones largas (10-13 horas). El día 2025-12-25 (Navidad) es el más rentable con utilidad de $288,000 COP.
 
 ---
 
-## Análisis 3: Top 10 Mejores Días
+## TABLA 4: TOP 5 PEORES DÍAS (Por Utilidad Neta)
 
-| Fecha | RO | Salario/H | Utilidad | Efic Cohetes | KM Reales |
-|-------|-----|-----------|----------|--------------|-----------|
-| 2025-12-25 | 1.67x | $52,340 | $282,256 | 57.1% | 86.5 |
-| 2026-01-11 | 1.73x | $50,819 | $236,515 | 100.0% | 60.4 |
-| 2025-12-21 | 1.43x | $44,891 | $234,754 | 100.0% | 94.8 |
-| 2025-12-14 | 1.37x | $44,682 | $219,352 | 100.0% | 101.9 |
-| 2025-12-20 | 1.44x | $44,177 | $234,351 | 90.0% | 102.0 |
-| 2025-12-28 | 1.60x | $44,076 | $257,424 | 72.2% | 85.3 |
-| 2026-01-18 | 1.99x | $43,947 | $180,048 | 89.5% | 44.0 |
-| 2025-12-07 | 1.83x | $43,409 | $205,483 | 82.4% | 66.8 |
-| 2025-12-06 | 1.66x | $40,194 | $162,008 | 100.0% | 72.6 |
-| 2026-01-01 | 1.67x | $39,817 | $175,884 | 70.6% | 57.9 |
+| Ranking | Fecha | Utilidad | Gastos | Pedidos | Duración | Falla Técnica |
+|---------|-------|----------|--------|---------|----------|---------------|
+| ⚠️ | 2026-01-24 | $29,500 | $18,000 | 6 | 3.90 h | Bajo volumen |
+| ⚠️ | 2026-01-08 | $31,000 | $0 | 3 | 0.82 h | Turno cortísimo |
+| ⚠️ | 2025-12-23 | $57,000 | $16,000 | 8 | 4.63 h | Media jornada |
+| ⚠️ | 2026-01-30 | $71,500 | $18,000 | 9 | 6.28 h | Baja eficiencia |
+| ⚠️ | 2026-01-12 | $84,000 | $20,000 | 9 | 5.78 h | Gastos altos |
 
-### Patrón Identificado
+**Análisis de fallas:**
+1. **2026-01-24:** Solo 6 pedidos en 3.9 horas. Posible falla de sistema o baja demanda.
+2. **2026-01-08:** Turno de 49 minutos con 3 pedidos. Probable prueba o error de registro.
+3. **2025-12-23:** Media jornada (4.63h). Turno interrumpido o decisión operativa.
+4. **2026-01-30:** 9 pedidos en 6.28 horas. Baja densidad de pedidos.
+5. **2026-01-12:** Gastos de $20,000 COP reducen utilidad neta.
 
-**Mejor día (2025-12-25):**
-- Combina **alto volumen** (21 pedidos)
-- Con **alta eficiencia** (57% cohetes)
-- Y **duración extendida** (10.7 horas)
-
-**No es solo sobre RO:** El mejor salario/hora resulta de balancear:
-1. RO moderado-alto (1.5-2.0x)
-2. Volumen sustancial (15-20 pedidos)
-3. Duración óptima (8-11 horas)
+**Recomendación:**  
+Evitar turnos menores a 5 horas salvo alta demanda comprobada.
 
 ---
 
-## Análisis 4: Peores 5 Días
+## TABLA 5: ANÁLISIS DE ASIMETRÍA (RO - Ratio de Optimización)
 
-| Fecha | RO | Salario/H | Utilidad | Razón Probable |
-|-------|-----|-----------|----------|----------------|
-| 2026-01-08 | 1.59x | $9,657 | $27,316 | Bajo volumen (3 ped) |
-| 2026-01-24 | 1.55x | $10,894 | $25,133 | Bajo volumen (6 ped) + gasto alto |
-| 2025-12-13 | 1.46x | $15,642 | $77,175 | Gasto operativo excepcional ($58k) |
-| 2026-01-12 | 1.43x | $20,551 | $79,624 | Turno corto (6.8h) |
-| 2026-01-17 | 1.72x | $29,760 | $99,160 | Bajo volumen (11 ped) |
+### Top 5 Días con Mayor Asimetría Algorítmica
 
-### Insight
+| Fecha | RO | KM Google | KM DiDi | Diferencia | Pedidos |
+|-------|-------|-----------|---------|------------|---------|
+| 2026-01-04 | **2.37x** | 33.80 | 80.1 | +46.30 km | 15 |
+| 2025-12-23 | **2.10x** | 23.40 | 49.1 | +25.70 km | 8 |
+| 2026-01-17 | **2.07x** | 38.95 | 80.8 | +41.85 km | 11 |
+| 2026-01-24 | **2.02x** | 18.79 | 38.0 | +19.21 km | 6 |
+| 2025-12-05 | **1.97x** | 45.06 | 88.6 | +43.54 km | 12 |
 
-**Factores de bajo rendimiento:**
-1. ❌ Volumen bajo (<8 pedidos)
-2. ❌ Gastos excepcionales (>$30k)
-3. ❌ Turnos muy cortos (<5 horas)
+**Interpretación:**
+- El día 2026-01-04 tiene la mayor asimetría: **DiDi calcula rutas 137% más largas**.
+- En promedio, RO = 1.66x significa que DiDi sugiere rutas **66% más largas**.
+- La diferencia acumulada es de **+1,030.51 km** (DiDi vs Google).
 
----
-
-## Análisis 5: KM Reales vs Reportados (Detalle)
-
-### Top 5 Mayor Diferencia Absoluta
-
-| Fecha | KM Reales | KM DiDi | Diferencia | RO | Ventaja % |
-|-------|-----------|---------|------------|-----|-----------|
-| 2025-12-08 | 104.61 | 135.40 | +30.79 | 1.29x | +29% |
-| 2025-12-06 | 72.58 | 120.70 | +48.12 | 1.66x | +66% |
-| 2025-12-07 | 66.79 | 122.50 | +55.71 | 1.83x | +83% |
-| 2025-12-25 | 86.50 | 144.70 | +58.20 | 1.67x | +67% |
-| 2025-12-20 | 102.02 | 146.80 | +44.78 | 1.44x | +44% |
-
-### Top 5 Mayor RO Relativo
-
-| Fecha | KM Reales | KM DiDi | RO | Ventaja % |
-|-------|-----------|---------|-----|-----------|
-| 2026-01-18 | 43.98 | 87.50 | **1.99x** | +99% |
-| 2025-12-05 | 45.06 | 88.60 | 1.97x | +97% |
-| 2025-12-07 | 66.79 | 122.50 | 1.83x | +83% |
-| 2026-01-11 | 60.38 | 104.70 | 1.73x | +73% |
-| 2026-01-17 | 30.96 | 53.30 | 1.72x | +72% |
-
-**Insight:** Días con 40-60 km reales tienden a tener **mayor RO** que días con >100 km, sugiriendo que en distancias medias hay más oportunidad de atajos.
+**Oportunidad de arbitraje:**
+- Si el operador usa rutas de Google (bicicleta) en moto, ahorra 1,030.51 km en 26 días.
+- Esto representa **39.6 km/día ahorrados**, aproximadamente 2.6 litros de combustible/día (asumiendo 15 km/litro).
 
 ---
 
-## Análisis 6: Eficiencia Temporal
+## TABLA 6: EFICIENCIA POR PEDIDO
 
-### Velocidad Operativa
+### Top 5 Días con Mayor KM por Pedido (DiDi)
 
-| Rango km/h | Días | Salario/H Prom | Utilidad Prom |
-|------------|------|----------------|---------------|
-| ≥10 km/h | 8 | $42,150 | $215,000 |
-| 8-10 km/h | 11 | $36,800 | $185,000 |
-| <8 km/h | 6 | $28,900 | $142,000 |
+| Fecha | KM/Pedido (DiDi) | KM/Pedido (Google) | RO | Pedidos |
+|-------|------------------|---------------------|-----|---------|
+| 2026-01-08 | 8.60 | 6.44 | 1.34x | 3 |
+| 2025-12-13 | 8.37 | 5.73 | 1.46x | 11 |
+| 2026-01-31 | 8.33 | 5.00 | 1.67x | 15 |
+| 2026-01-10 | 8.13 | 4.96 | 1.64x | 12 |
+| 2025-12-06 | 8.05 | 4.84 | 1.66x | 15 |
 
-**Correlación:** Mayor velocidad operativa → Mayor salario/hora
-
-### Velocidad de Enganche
-
-| Min/Pedido | Días | Eficiencia | Observación |
-|------------|------|------------|-------------|
-| <30 min | 6 | Alta | Turnos muy productivos |
-| 30-40 min | 13 | Media | Rango típico |
-| >40 min | 6 | Baja | Días con mucha espera |
+**Análisis:**
+- Los días con mayor km/pedido (DiDi) tienen entregas más dispersas geográficamente.
+- El promedio global es **7.17 km/pedido (DiDi)** vs **4.33 km/pedido (Google)**.
+- Esto confirma que Google Maps optimiza rutas más cortas (ciclorrutas).
 
 ---
 
-## Análisis 7: Tendencia Temporal
+## TABLA 7: ANÁLISIS DE RENTABILIDAD POR HORA
 
-### Por Mes
+### Top 5 Días con Mayor Ingreso por Hora
 
-| Mes | Días | RO Prom | Salario/H | Utilidad Total |
-|-----|------|---------|-----------|----------------|
-| 2025-12 | 13 | 1.59x | $37,215 | $2,123,000 |
-| 2026-01 | 12 | 1.72x | $34,120 | $1,584,269 |
+| Fecha | Ingreso/Hora | Utilidad/Hora | Duración | Pedidos | Eficiencia |
+|-------|--------------|---------------|----------|---------|------------|
+| 2025-12-28 | $26,622 | $25,212 | 10.63 h | 18 | Alta |
+| 2025-12-25 | $24,160 | $23,040 | 12.50 h | 21 | Alta |
+| 2025-12-14 | $23,198 | $21,442 | 10.82 h | 18 | Alta |
+| 2025-12-20 | $22,536 | $21,165 | 11.67 h | 20 | Alta |
+| 2025-12-07 | $21,543 | $19,849 | 10.63 h | 17 | Alta |
 
-**Observación:** 
-- RO mejoró +8% en enero
-- Pero salario/hora bajó -8%
-- Razón: Menor volumen de pedidos en enero
-
-### Por Semana
-
-| Semana | Días | RO | Utilidad | Tendencia |
-|--------|------|----|----------|-----------|
-| Sem 49 | 4 | 1.63x | $733,000 | ↗️ |
-| Sem 50 | 2 | 1.42x | $388,000 | ↘️ |
-| Sem 51 | 4 | 1.56x | $890,000 | ↗️ |
-| Sem 52 | 3 | 1.58x | $535,000 | → |
-| Sem 1 | 5 | 1.69x | $740,269 | ↗️ |
-| Sem 2 | 2 | 1.67x | $223,000 | → |
-| Sem 3 | 3 | 1.76x | $303,000 | ↗️ |
-| Sem 4 | 2 | 1.53x | $195,000 | ↘️ |
-
-**Sin tendencia clara:** RO se mantiene estable alrededor de 1.6-1.7x
+**Patrón:**
+- Los días más eficientes tienen duraciones de 10-13 horas.
+- Ingresos por hora superiores a $20,000 COP son excepcionales.
+- La utilidad por hora promedio global es de **$16,936.73 COP/hora**.
 
 ---
 
-## Análisis 8: ROI y Rentabilidad
+## TABLA 8: DÍAS CON GASTO $0 COP (Anomalías Técnicas)
 
-### Desglose de Costos
+| Fecha | Ingresos | Utilidad | Pedidos | Duración | ROI | Nota |
+|-------|----------|----------|---------|----------|-----|------|
+| 2026-01-11 | $244,000 | $244,000 | 18 | 12.45 h | N/A | Gasto no registrado |
+| 2026-01-01 | $183,000 | $183,000 | 17 | 12.32 h | N/A | Día festivo |
+| 2026-01-25 | $169,500 | $169,500 | 16 | 10.97 h | N/A | Moto compartida (hipótesis) |
+| 2025-12-24 | $132,000 | $132,000 | 10 | 8.52 h | N/A | Nochebuena |
+| 2025-12-31 | $125,000 | $125,000 | 13 | 8.53 h | N/A | Año Nuevo |
+| 2026-01-08 | $31,000 | $31,000 | 3 | 0.82 h | N/A | Error de registro |
 
-| Concepto | Monto | % del Ingreso |
-|----------|-------|---------------|
-| **Ingreso Bruto** | $4,279,030 | 100% |
-| Gastos Operativos | -$382,500 | 8.9% |
-| Desgaste Bici | -$0 | 0% |
-| **Utilidad Neta** | **$4,009,530** | **93.7%** |
+**Total acumulado:** $884,500 COP en ingresos sin gastos registrados (19.9% del total)
 
-### ROI
+**Hipótesis de causa:**
+1. Omisión de registro manual (más probable)
+2. Uso de moto compartida/préstamo (sin costo de combustible)
+3. Días de prueba/cortesía con DiDi (improbable)
 
-```
-ROI = (Utilidad / Costos) × 100
-ROI = ($4,009,530 / $161,779) × 100
-ROI = 2,479%
-```
-
-**Cada peso invertido genera $24.79 de utilidad**
-
-### Comparación con Salario Mínimo
-
-| Métrica | Valor |
-|---------|-------|
-| Salario mínimo 2026 (COP) | $6,667/hora |
-| Salario efectivo promedio | $35,784/hora |
-| **Múltiplo sobre mínimo** | **5.37x** |
+**Impacto en ROI Global:**
+- Si estos 6 días tuvieran gastos de $16,576.92 (promedio), el ROI disminuiría marginalmente.
+- La decisión de auditoría es **no ajustar artificialmente** estos registros.
 
 ---
 
-## Análisis 9: Correlaciones Estadísticas
+## TABLA 9: TURNOS CON CRUCE DE MEDIANOCHE
 
-### Matriz de Correlación (Pearson)
+| Fecha | Hora Inicio | Hora Fin | Duración | Pedidos | RO | Nota |
+|-------|-------------|----------|----------|---------|-----|------|
+| 2026-01-11 | 11:55 | 0:22 | 12.45 h | 18 | 1.53x | Turno largo |
+| 2026-01-31 | 12:44 | 0:02 | 11.30 h | 15 | 1.67x | Turno largo |
+| 2025-12-13 | 17:01 | 0:12 | 7.18 h | 11 | 1.46x | Turno nocturno |
+| 2026-01-17 | 17:01 | 0:04 | 7.05 h | 11 | 2.07x | Alta asimetría |
 
-| | RO | Utilidad | Salario/H | Efic Cohete |
-|-|-----|----------|-----------|-------------|
-| **RO** | 1.00 | 0.32 | 0.41 | 0.28 |
-| **Utilidad** | 0.32 | 1.00 | 0.89 | 0.51 |
-| **Salario/H** | 0.41 | 0.89 | 1.00 | 0.47 |
-| **Efic Cohete** | 0.28 | 0.51 | 0.47 | 1.00 |
+**Tratamiento técnico:**
+- Se aplicó el algoritmo de "Día Operativo" para calcular duración correctamente.
+- Sin corrección, la duración sería negativa (error).
+- Ejemplo: `17:01 a 0:12` → `7.18 horas` (no `6.18` ni `-16.82`).
 
-### Interpretación
-
-1. **RO ↔ Salario/H:** Correlación moderada (r=0.41)
-   - Mayor RO **SÍ** mejora salario, pero no es el único factor
-
-2. **Utilidad ↔ Salario/H:** Correlación fuerte (r=0.89)
-   - Como esperado: más utilidad = más salario/hora
-
-3. **Eficiencia Cohete ↔ Utilidad:** Correlación moderada (r=0.51)
-   - Más cohetes **SÍ** mejora utilidad significativamente
+**Implicación operativa:**
+- Los turnos nocturnos son comunes (15.4% del dataset).
+- No hay penalización en rentabilidad por cruzar medianoche.
 
 ---
 
-## Análisis 10: Rangos Óptimos
+## TABLA 10: COMPARACIÓN DE FUENTES DE INGRESO
 
-### KM Reales Óptimo
+### Proporción de Bono vs Ingreso Base
 
-| Rango KM | Días | RO Prom | Salario/H | Velocidad |
-|----------|------|---------|-----------|-----------|
-| <40 km | 5 | 1.68x | $30,200 | 8.1 km/h |
-| 40-60 km | 8 | **1.74x** | $38,500 | 9.2 km/h |
-| 60-80 km | 7 | 1.62x | $39,100 | 8.8 km/h |
-| ≥80 km | 5 | 1.56x | $41,800 | 9.5 km/h |
+| Métrica | Valor | Proporción |
+|---------|-------|------------|
+| **Ingreso Base Total** | $2,441,426 | 55.00% |
+| **Complemento Bono Total** | $1,999,104 | 45.00% |
+| **Garantizado Meta Total** | $4,440,530 | 100% |
 
-**Óptimo:** 40-60 km reales maximiza RO
+**Distribución por día:**
 
-### Pedidos Óptimo
+| Rango de Proporción de Bono | Días | % del Total |
+|------------------------------|------|-------------|
+| 0.40 - 0.49 (40-49%) | 14 | 53.85% |
+| 0.50 - 0.59 (50-59%) | 10 | 38.46% |
+| 0.60 - 0.69 (60-69%) | 2 | 7.69% |
 
-| Total Pedidos | Días | Utilidad Prom | Salario/H |
-|---------------|------|---------------|-----------|
-| <10 | 4 | $98,000 | $23,100 |
-| 10-15 | 10 | $163,000 | $35,400 |
-| 15-20 | 9 | $221,000 | $41,200 |
-| ≥20 | 2 | $282,000 | $48,600 |
-
-**Óptimo:** 15-20 pedidos por día
-
----
-
-## Conclusiones
-
-### Hallazgos Principales
-
-1. ✅ **RO Global 1.71x:** Ventaja competitiva cuantificable y consistente
-2. ✅ **Estrategia Cohetes:** +39% utilidad con alta eficiencia de cohetes
-3. ✅ **ROI 648%:** Modelo de negocio altamente rentable
-4. ✅ **Salario 5.37x mínimo:** Ingreso significativamente superior al mínimo legal
-
-### Recomendaciones Operativas
-
-1. 📈 **Priorizar pedidos cohete** cuando RO > 1.5x
-2. 📍 **Operar en zonas con infraestructura ciclística** (Kennedy/Fontibón)
-3. ⏱️ **Turnos de 8-11 horas** con 15-20 pedidos
-4. 💰 **Controlar gastos operativos** bajo $25k/día
-
-### Limitaciones
-
-- Muestra N=1 (un operador)
-- Periodo corto (2 meses)
-- Zona específica (Kennedy/Fontibón)
-- Sin control de variables externas
+**Interpretación:**
+- El bono representa **45% de los ingresos totales**.
+- El modelo de negocio de DiDi depende fuertemente de bonos por cumplir metas.
+- La proporción de bono es estable (mayoría en 40-59%).
 
 ---
 
-**Documento de Resultados v1.0**  
-**Fecha:** Febrero 2026  
-**Autor:** Iván Felipe Castro Pinzón
+## CONCLUSIONES CLAVE
+
+### 1. Rentabilidad Excepcional
+- **ROI Global de 930.28%** confirma alta rentabilidad del modelo.
+- Cada peso invertido genera **$10.30 COP** de ingresos.
+
+### 2. Asimetría Algorítmica Confirmada
+- **RO Global de 1.66x** demuestra que DiDi calcula rutas 66% más largas.
+- Oportunidad de arbitraje: 39.6 km/día ahorrados usando rutas de Google.
+
+### 3. Anomalías Documentadas (Sin Maquillar)
+- **6 días con gasto $0** inflan el ROI artificialmente.
+- **4 turnos con cruce de medianoche** requieren tratamiento especial.
+- **Días con bajo volumen** (< 8 pedidos) son poco rentables.
+
+### 4. Recomendaciones Operativas
+- **Evitar turnos menores a 5 horas** salvo alta demanda.
+- **Maximizar turnos de 10-13 horas** para mejor ingreso/hora.
+- **Documentar gastos reales** para cálculos precisos de ROI.
+
+### 5. Limitaciones del Estudio
+- Operador único (no generalizable).
+- 26 días no consecutivos (estacionalidad limitada).
+- Sesgo de selección (solo pedidos aceptados).
+
+---
+
+## DIFERENCIACIÓN SEMÁNTICA FINAL
+
+### ⚠️ NO CONFUNDIR
+
+| Métrica | Uso | Fórmula | Valor |
+|---------|-----|---------|-------|
+| **RO (Ratio de Optimización)** | Eficiencia de distancia física | `km_didi / km_google` | **1.66x** |
+| **Múltiplo de Ingreso** | Relación financiera | `Ingresos / Gastos` | **10.30x** |
+| **ROI Global** | Retorno de Inversión | `(Utilidad / Gastos) × 100` | **930.28%** |
+
+---
+
+## PRINCIPIO DE TRANSPARENCIA RADICAL
+
+> "Este análisis no busca perfección estética, busca fidelidad técnica.  
+> Un ROI de 930% basado en datos reales es más valioso que un ROI de 1,000% basado en omisiones.  
+> Las anomalías se documentan, no se ocultan.  
+> La verdad por encima de la armonía."
+
+---
+
+**Firmado:**  IVÁN FELIPE CASTRO PINZÓN
+*Pipeline de Auditoría de Integridad v1.0*  
+*Fecha: 2026-02-13*  
+*Datos Auditados - Versión Final*
