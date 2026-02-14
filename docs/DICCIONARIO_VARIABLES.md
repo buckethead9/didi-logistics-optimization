@@ -368,4 +368,5 @@ rentabilidad_binaria = 1 if utilidad_neta > 0 else 0
 ---
 
 **Última Actualización:** 2026-02-13  
-**Firmado:** Pipeline de Auditoría de Integridad v1.0
+**Firmado:** IVÁN FELIPE CASTRO PINZÓN
+Pipeline de Auditoría de Integridad v1.0
